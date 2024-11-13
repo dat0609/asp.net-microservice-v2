@@ -1,0 +1,15 @@
+D:\C#\asp-microservices\src\BuildingBlocks\Infrastructure\bin\Debug\net7.0\Infrastructure.deps.json
+D:\C#\asp-microservices\src\BuildingBlocks\Infrastructure\bin\Debug\net7.0\Infrastructure.dll
+D:\C#\asp-microservices\src\BuildingBlocks\Infrastructure\bin\Debug\net7.0\Infrastructure.pdb
+D:\C#\asp-microservices\src\BuildingBlocks\Infrastructure\bin\Debug\net7.0\Contracts.dll
+D:\C#\asp-microservices\src\BuildingBlocks\Infrastructure\bin\Debug\net7.0\Contracts.pdb
+D:\C#\asp-microservices\src\BuildingBlocks\Infrastructure\obj\Debug\net7.0\Infrastructure.csproj.AssemblyReference.cache
+D:\C#\asp-microservices\src\BuildingBlocks\Infrastructure\obj\Debug\net7.0\Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+D:\C#\asp-microservices\src\BuildingBlocks\Infrastructure\obj\Debug\net7.0\Infrastructure.AssemblyInfoInputs.cache
+D:\C#\asp-microservices\src\BuildingBlocks\Infrastructure\obj\Debug\net7.0\Infrastructure.AssemblyInfo.cs
+D:\C#\asp-microservices\src\BuildingBlocks\Infrastructure\obj\Debug\net7.0\Infrastructure.csproj.CoreCompileInputs.cache
+D:\C#\asp-microservices\src\BuildingBlocks\Infrastructure\obj\Debug\net7.0\Infrastructure.csproj.CopyComplete
+D:\C#\asp-microservices\src\BuildingBlocks\Infrastructure\obj\Debug\net7.0\Infrastructure.dll
+D:\C#\asp-microservices\src\BuildingBlocks\Infrastructure\obj\Debug\net7.0\refint\Infrastructure.dll
+D:\C#\asp-microservices\src\BuildingBlocks\Infrastructure\obj\Debug\net7.0\Infrastructure.pdb
+D:\C#\asp-microservices\src\BuildingBlocks\Infrastructure\obj\Debug\net7.0\ref\Infrastructure.dll
