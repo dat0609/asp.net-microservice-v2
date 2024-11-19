@@ -118,3 +118,14 @@ services:
       - "6002:80"
     restart: always
         
+  customer.api:
+    container_name: customer.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - "ConnectionStrings:DefaultConnectionString=Server=customerdb;Port=5432;Database=Customerdb;User Id=admin;Password=admin1234"
+    depends_on:
+      - productdb
+    ports:
+      - "6003:80"
+    restart: always

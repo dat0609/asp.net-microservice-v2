@@ -28,7 +28,7 @@ public static class ServiceExtensions
         /*var databaseSettings = services.GetOptions<DatabaseSettings>(nameof(DatabaseSettings));
         if (databaseSettings == null || string.IsNullOrEmpty(databaseSettings.ConnectionString))
             throw new ArgumentNullException("Connection string is not configured.");*/
-        var databaseSettings = configuration.GetConnectionString("DefaultConnection");
+        var databaseSettings = configuration.GetConnectionString("DefaultConnectionString");
         services.AddDbContext<CustomerContext>(
             options => options.UseNpgsql(databaseSettings));
     }
