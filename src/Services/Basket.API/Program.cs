@@ -15,6 +15,7 @@ try
     builder.Services.AddSwaggerGen();
     builder.Host.AddAppConfigurations();
     builder.Services.ConfigureServices();
+    builder.Services.ConfigureRedis(builder.Configuration);
 
     var app = builder.Build();
 
@@ -38,7 +39,7 @@ catch (Exception ex)
     string type = ex.GetType().Name;
     if (type.Equals("StopTheHostException", StringComparison.Ordinal)) throw;
 
-    Log.Fatal(ex, "Unhandled exception: {ex.Message}", ex.Message);
+    Log.Fatal($"Unhandled exception: {ex.Message}");
 }
 finally
 {
