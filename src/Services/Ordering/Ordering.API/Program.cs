@@ -1,7 +1,12 @@
+using System.Reflection;
 using Ordering.Infrastructure;
 using Ordering.Infrastructure.Persistence;
 using Serilog;
 using Common.Logging;
+using MediatR;
+using Ordering.API.Extensions;
+using Ordering.Application;
+using Ordering.Application.Features.V1.Orders.Queries.GetOrders;
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
@@ -13,18 +18,18 @@ Log.Information($"Start {builder.Environment.ApplicationName} up");
 
 try
 {
+    builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
+
     // Add services to the container.
-    //builder.Host.AddAppConfigurations();
+    builder.Host.AddAppConfigurations();
     //builder.Services.AddConfigurationSettings(builder.Configuration);
-    //builder.Services.AddApplicationServices();
+    builder.Services.AddApplicationServices();
     builder.Services.AddInfrastructureServices(builder.Configuration);
     //builder.Services.ConfigureMassTransit();
-
     builder.Services.AddControllers();
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
-    
     var app = builder.Build();
 
     // Configure the HTTP request pipeline.
