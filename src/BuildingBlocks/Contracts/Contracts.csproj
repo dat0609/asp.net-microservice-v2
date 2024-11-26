@@ -10,4 +10,8 @@
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.20" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Shared\Shared.csproj" />
+    </ItemGroup>
+
 </Project>
