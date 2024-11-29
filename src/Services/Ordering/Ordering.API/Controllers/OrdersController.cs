@@ -4,7 +4,7 @@ using Contracts.Services;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Ordering.Application.Common.Models;
-using Ordering.Application.Features.V1.Orders.Queries.GetDemo;
+using Ordering.Application.Features.V1.Orders.Commands.CreateOrder;
 using Ordering.Application.Features.V1.Orders.Queries.GetOrders;
 using Ordering.Domain.Entities;
 using Shared.Services.Email;
@@ -25,6 +25,7 @@ public class OrdersController : ControllerBase
     private static class RouteNames
     {
         public const string GetOrders = nameof(GetOrders);
+        public const string CreateOrder = nameof(CreateOrder);
     }
     
     [HttpGet("{username}", Name = RouteNames.GetOrders)]
@@ -47,5 +48,14 @@ public class OrdersController : ControllerBase
         };
         await _emailService.SendEmailAsync(msg);
         return Ok();
+    }
+    
+    [HttpPost(RouteNames.CreateOrder)]
+    [ProducesResponseType(typeof(IEnumerable<OrderDto>), (int)HttpStatusCode.OK)]
+    public async Task<IActionResult> CreateOrderAsync([Required] CreateOrderCommand command)
+    {
+        var result = await _mediator.Send(command);
+        return Ok(result);
+
     }
 }

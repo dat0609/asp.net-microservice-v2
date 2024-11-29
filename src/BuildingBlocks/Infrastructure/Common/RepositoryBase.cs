@@ -33,7 +33,11 @@ public class RepositoryBase<T, K, TContext> : RepositoryQueryBase<T, K, TContext
 
     public Task RollbackTransactionAsync() => _dbContext.Database.RollbackTransactionAsync();
 
-    public void Create(T entity) => _dbContext.Set<T>().Add(entity);
+    public async Task Create(T entity)
+    {
+        _dbContext.Set<T>().Add(entity);
+        await SaveChangesAsync();
+    }
 
     public async Task<K> CreateAsync(T entity)
     {
