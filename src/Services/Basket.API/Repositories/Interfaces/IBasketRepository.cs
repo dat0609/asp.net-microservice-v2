@@ -1,4 +1,4 @@
-﻿using Basket.API.Entities;
+using Basket.API.Entities;
 using Microsoft.Extensions.Caching.Distributed;
 
 namespace Basket.API.Repositories.Interfaces;

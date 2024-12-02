@@ -16,6 +16,7 @@
       <PackageReference Include="inercya.Newtonsoft.Json.Converters" Version="1.0.1" />
       <PackageReference Include="MailKit" Version="4.8.0" />
       <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+      <PackageReference Include="RabbitMQ.Client" Version="7.0.0" />
     </ItemGroup>
 
 </Project>

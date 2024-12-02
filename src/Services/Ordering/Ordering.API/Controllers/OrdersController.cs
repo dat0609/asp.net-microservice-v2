@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Net;
+using Contracts.Messages;
 using Contracts.Services;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -17,10 +18,12 @@ public class OrdersController : ControllerBase
 {
     private readonly IMediator _mediator;
     private readonly ISmtpEmailService _emailService;
-    public OrdersController(IMediator mediator, ISmtpEmailService emailService)
+    private readonly IMessageProducer _messageProducer;
+    public OrdersController(IMediator mediator, ISmtpEmailService emailService, IMessageProducer messageProducer)
     {
         _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         _emailService = emailService;
+        _messageProducer = messageProducer;
     }
     private static class RouteNames
     {
@@ -56,6 +59,12 @@ public class OrdersController : ControllerBase
     {
         var result = await _mediator.Send(command);
         return Ok(result);
+    }
 
+    [HttpPost("events")]
+    public async Task<IActionResult> GetOrderEventsAsync([FromBody] Order order)
+    {
+        await _messageProducer.SendMessageAsync(order.ToString());
+        return Ok();
     }
 }

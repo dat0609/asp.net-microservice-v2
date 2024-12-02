@@ -1,9 +1,14 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.Net;
+using AutoMapper;
 using Basket.API.Entities;
 using Basket.API.Repositories.Interfaces;
+using Basket.API.Service.Interface;
+using EventBus.Messages.IntegrationEvents.Events;
+using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
+using Shared.DTOs.Basket;
 
 namespace Basket.API.Controllers;
 
@@ -12,15 +17,19 @@ namespace Basket.API.Controllers;
 public class BasketsController : ControllerBase
 {
     private readonly IBasketRepository _basketRepository;
+    private readonly IMapper _mapper;
+    private readonly IPublishEndpoint _publishEndpoint;
 
-    public BasketsController(IBasketRepository basketRepository)
+    public BasketsController(IBasketRepository basketRepository, IMapper mapper, IPublishEndpoint publishEndpoint)
     {
-        _basketRepository = basketRepository;
+        _basketRepository = basketRepository ?? throw new ArgumentNullException(nameof(basketRepository));
+        _publishEndpoint = publishEndpoint ?? throw new ArgumentNullException(nameof(publishEndpoint));
+        _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
     }
-    
+
     [HttpGet("{username}", Name = "GetBasket")]
-    [ProducesResponseType(typeof(Cart), (int)HttpStatusCode.OK)]
-    public async Task<ActionResult> GetBasket([Required] string username)
+    [ProducesResponseType(typeof(CartDto), (int)HttpStatusCode.OK)]
+    public async Task<ActionResult<CartDto>> GetBasket([Required] string username)
     {
         var result = await _basketRepository.GetBasketByUserName(username);
 
@@ -28,8 +37,8 @@ public class BasketsController : ControllerBase
     }
     
     [HttpPost(Name = "UpdateBasket")]
-    [ProducesResponseType(typeof(Cart), (int)HttpStatusCode.OK)]
-    public async Task<ActionResult> UpdateBasket([FromBody] Cart cart)
+    [ProducesResponseType(typeof(CartDto), (int)HttpStatusCode.OK)]
+    public async Task<ActionResult<CartDto>> UpdateBasket([FromBody] CartDto model)
     {
         // Communicate with Inventory.Product.Grpc and check quantity available of products
         /*foreach (var item in model.Items)
@@ -42,11 +51,13 @@ public class BasketsController : ControllerBase
             .SetAbsoluteExpiration(DateTime.UtcNow.AddHours(10));
         //     .SetSlidingExpiration(TimeSpan.FromMinutes(10));
         
-        //var cart = _mapper.Map<Cart>(model);
-        var updateCart = await _basketRepository.UpdateBasket(cart, options);
-        //var result = _mapper.Map<CartDto>(updateCart);
+        var cart = _mapper.Map<Cart>(model);
         
-        return Ok(updateCart);
+        var updateCart = await _basketRepository.UpdateBasket(cart, options);
+
+        var result = _mapper.Map<CartDto>(updateCart);
+        
+        return Ok(result);
     }
     
     [HttpDelete("{username}", Name = "DeleteBasket")]
@@ -56,4 +67,37 @@ public class BasketsController : ControllerBase
         var result = await _basketRepository.DeleteBasketFromUserName(username);
         return Ok(result);
     }
+
+    [Route("[action]")]
+    [HttpPost]
+    [ProducesResponseType((int)HttpStatusCode.Accepted)]
+    [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+    public async Task<IActionResult> Checkout([FromBody] BasketCheckout basketCheckout)
+    {
+        var basket = await _basketRepository.GetBasketByUserName(basketCheckout.UserName);
+        if (basket == null) return NotFound();
+        
+        //publish checkout event to EventBus Message
+        var eventMessage = _mapper.Map<BasketCheckoutEvent>(basketCheckout);
+        eventMessage.TotalPrice = basket.TotalPrice;
+        await _publishEndpoint.Publish(eventMessage);
+        //remove the basket
+        await _basketRepository.DeleteBasketFromUserName(basket.Username);
+        
+        return Accepted();
+    }
+    
+    /*[HttpPost("email")]
+    public ContentResult SendEmail()
+    {
+        var result = _emailTemplateService.GenerateReminderEmail("datlqse140263@fpt.edu.vn");
+
+        var rs = new ContentResult
+        {
+            Content = result,
+            ContentType = "text/html",
+        };
+            
+        return rs;
+    }*/
 }

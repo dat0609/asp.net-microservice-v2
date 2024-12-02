@@ -1,8 +1,8 @@
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace Basket.API.Entities;
+namespace Shared.DTOs.Basket;
 
-public class CartItem
+public class CartItemDto
 {
     [Required]
     [Range(1, double.PositiveInfinity, ErrorMessage = "The field {0} must be >= {1}.")]

@@ -1,4 +1,4 @@
-﻿using Common.Logging;
+using Common.Logging;
 using Serilog;
 
 namespace Basket.API.Extensions;

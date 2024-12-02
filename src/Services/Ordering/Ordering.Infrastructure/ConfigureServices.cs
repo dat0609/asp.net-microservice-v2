@@ -1,6 +1,8 @@
 ﻿using Contracts.Common.Interfaces;
+using Contracts.Messages;
 using Contracts.Services;
 using Infrastructure.Common;
+using Infrastructure.Messages;
 using Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -29,8 +31,9 @@ public static class ConfigureServices
         });
         services.AddScoped<OrderContextSeed>();
         services.AddScoped<IOrderRepository, OrderRepository>();
+        services.AddScoped<IMessageProducer, RabbitMQProducer>();
+        services.AddScoped<ISerializeService, SerializeService>();
         services.AddScoped(typeof(IUnitOfWork<>), typeof(UnitOfWork<>));
-
         services.AddScoped(typeof(ISmtpEmailService), typeof(SmtpEmailService));
 
         return services;
