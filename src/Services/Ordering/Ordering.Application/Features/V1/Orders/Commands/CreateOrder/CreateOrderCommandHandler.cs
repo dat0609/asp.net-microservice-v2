@@ -25,7 +25,10 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, lon
             ShippingAddress = request.ShippingAddress,
             InvoiceAddress = request.InvoiceAddress,
         };
-        await _orderRepository.Create(newOrder);
+        _orderRepository.Create(newOrder);
+        newOrder.AddedOrder();
+        //newOrder.DeletedOrder();
+        await _orderRepository.SaveChangesAsync();
         
         return newOrder.Id;
     }
