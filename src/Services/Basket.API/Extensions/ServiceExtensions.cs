@@ -1,3 +1,4 @@
+using Basket.API.GrpcServices;
 using Basket.API.Repositories;
 using Basket.API.Repositories.Interfaces;
 using Basket.API.Service;
@@ -9,6 +10,7 @@ using EventBus.Messages.IntegrationEvents.Interfaces;
 using Infrastructure.Common;
 using Infrastructure.Extensions;
 using Infrastructure.Messages;
+using Inventory.Grpc.Protos;
 using MassTransit;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Shared.Configurations;
@@ -28,11 +30,11 @@ public static class ServiceExtensions
             .Get<CacheSettings>();
         services.AddSingleton(cacheSettings);
         
-        /*var grpcSettings = configuration.GetSection(nameof(GrpcSettings))
+        var grpcSettings = configuration.GetSection(nameof(GrpcSettings))
             .Get<GrpcSettings>();
         services.AddSingleton(grpcSettings);
         
-        var backgroundJob = configuration.GetSection(nameof(BackgroundJobSettings))
+        /*var backgroundJob = configuration.GetSection(nameof(BackgroundJobSettings))
             .Get<BackgroundJobSettings>();
         services.AddSingleton(backgroundJob);*/
 
@@ -44,14 +46,15 @@ public static class ServiceExtensions
             .AddScoped<IMessageProducer, RabbitMQProducer>()
             .AddTransient<ISerializeService, SerializeService>();
 
-    /*public static IServiceCollection ConfigureGrpcService(this IServiceCollection services)
+    public static IServiceCollection ConfigureGrpcService(this IServiceCollection services)
     {
         var settings = services.GetOptions<GrpcSettings>(nameof(GrpcSettings));
         services.AddGrpcClient<StockProtoService.StockProtoServiceClient>(x => 
             x.Address = new Uri(settings.StockUrl));
+        
         services.AddScoped<StockItemGrpcService>();
         return services;
-    }*/
+    }
 
     public static void ConfigureRedis(this IServiceCollection services)
     {

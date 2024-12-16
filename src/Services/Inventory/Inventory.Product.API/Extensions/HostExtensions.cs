@@ -1,5 +1,6 @@
 ﻿using Inventory.Product.API.Persistence;
 using MongoDB.Driver;
+using Shared.Configurations;
 
 namespace Inventory.Product.API.Extensions;
 

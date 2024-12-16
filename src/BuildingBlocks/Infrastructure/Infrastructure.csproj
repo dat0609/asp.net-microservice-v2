@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net7.0</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
     </PropertyGroup>
@@ -17,7 +17,7 @@
       <PackageReference Include="inercya.Newtonsoft.Json.Converters" Version="1.0.1" />
       <PackageReference Include="MailKit" Version="4.8.0" />
       <PackageReference Include="MediatR" Version="10.0.1" />
-      <PackageReference Include="MongoDB.Driver" Version="3.0.0" />
+      <PackageReference Include="MongoDB.Driver" Version="3.1.0" />
       <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
       <PackageReference Include="RabbitMQ.Client" Version="7.0.0" />
     </ItemGroup>

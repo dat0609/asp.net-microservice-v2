@@ -1,11 +1,12 @@
 ﻿using AutoMapper;
+using Infrastructure.Common;
 using Infrastructure.Extensions;
 using Inventory.Product.API.Entities;
 using Inventory.Product.API.Extensions;
-using Inventory.Product.API.Repositories;
 using Inventory.Product.API.Services.Interfaces;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using Shared.Configurations;
 using Shared.DTOs.Inventory;
 using Shared.SeedWork;
 
@@ -38,7 +39,7 @@ public class InventoryService : MongoDbRepository<InventoryEntry>, IInventorySer
 
         var andFilter = filterItemNo & filterSearchTerm; 
        
-        var pagedList = await Collection.PaginatedListAsync(andFilter, pageIndex: query.PageNumber, pageNumber: query.PageSize);        
+        var pagedList = await Collection.PaginatedListAsync(andFilter, pageIndex: query.PageNumber, pageSize: query.PageSize);        
         var items = _mapper.Map<IEnumerable<InventoryEntryDto>>(pagedList);
         var result = new PagedList<InventoryEntryDto>(items, pagedList.GetMetaData().TotalItems, query.PageNumber,
             query.PageSize);
