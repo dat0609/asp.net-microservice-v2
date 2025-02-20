@@ -17,6 +17,9 @@ services:
   inventorydb:
     image: mongo
     
+  hanfiredb:
+    image: mongo
+    
   #infrastructure section
   rabbitmq:
     image: rabbitmq:3-management-alpine
@@ -71,6 +74,12 @@ services:
       context: .
       dockerfile: Services/Inventory/Inventory.Grpc/Dockerfile
       
+  apigw.ocelot:
+    image: ${DOCKER_REGISTRY-}apigw-ocelot:${PLATFORM:-linux}-${TAG:-latest}
+    build:
+      context: .
+      dockerfile: ApiGateways/OcelotApiGw/Dockerfile
+      
 #network
 networks:
   default:
@@ -95,3 +104,5 @@ volumes:
     name: mongo_data
   pgadmin_data:
     name: pgadmin_data
+  hangfire_mongo_data:
+    name: hangfire_data

@@ -54,6 +54,17 @@ services:
       - "27017:27017"
     volumes:
       - mongo_data:/data/db
+      
+  hanfiredb:
+    container_name: hanfiredb
+    restart: always
+    ports:
+      - "27018:27017"
+    volumes:
+      - hangfire_mongo_data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: 'admin'
+      MONGO_INITDB_ROOT_PASSWORD: 'admin'
 
   #infrastructure section
   rabbitmq:
@@ -183,4 +194,20 @@ services:
       - inventorydb
     ports:
       - "6007:80"
+    restart: always
+    
+  apigw.ocelot:
+    container_name: apigw.ocelot
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Local
+      - ASPNETCORE_URLS=http://+:80
+      - GlobalConfiguration:BaseUrl=http://apigw.ocelot
+    depends_on:
+      - customer.api
+      - basket.api
+      - product.api
+      - ordering.api
+      - inventory.product.api
+    ports:
+      - "6001:80"
     restart: always

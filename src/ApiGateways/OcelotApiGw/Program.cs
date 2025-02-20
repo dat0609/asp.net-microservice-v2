@@ -15,7 +15,7 @@ try
 {
     // Add services to the container.
     builder.Host.AddAppConfigurations();
-    //builder.Services.AddConfigurationSettings(builder.Configuration);
+    builder.Services.AddConfigurationSettings(builder.Configuration);
     builder.Services.AddControllers();
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
     builder.Services.AddEndpointsApiExplorer();
@@ -36,10 +36,10 @@ try
     app.UseCors("CorsPolicy");
 
     //app.UseMiddleware<ErrorWrappingMiddleware>();
-    // app.UseAuthentication();
+    app.UseAuthentication();
     app.UseRouting();
     // app.UseHttpsRedirection();
-    // app.UseAuthorization();
+    app.UseAuthorization();
     app.UseEndpoints(endpoints =>
     {
         endpoints.MapGet("/",  context =>
@@ -49,10 +49,9 @@ try
             return Task.CompletedTask;
         });
     });
-
+    app.MapControllers();
     app.UseSwaggerForOcelotUI(
         opt => { opt.PathToSwaggerGenerator = "/swagger/docs"; });
-   
     await app.UseOcelot();
     app.Run();
 }

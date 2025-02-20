@@ -1,4 +1,9 @@
 ﻿using System.Text;
+using Contracts.Identity;
+using Infrastructure.Extensions;
+using Infrastructure.Identity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using Ocelot.Cache.CacheManager;
 using Ocelot.DependencyInjection;
 using Ocelot.Provider.Polly;
@@ -11,9 +16,9 @@ public static class ServiceExtensions
     internal static IServiceCollection AddConfigurationSettings(this IServiceCollection services, 
         IConfiguration configuration)
     {
-        /*var jwtSettings = configuration.GetSection(nameof(JwtSettings))
+        var jwtSettings = configuration.GetSection(nameof(JwtSettings))
             .Get<JwtSettings>();
-        services.AddSingleton(jwtSettings);*/
+        services.AddSingleton(jwtSettings);
         return services;
     }
 
@@ -22,15 +27,15 @@ public static class ServiceExtensions
         services.AddOcelot(configuration)
             .AddPolly()
             .AddCacheManager(x => x.WithDictionaryHandle());
-        //services.AddTransient<ITokenService, TokenService>();
-        // services.AddJwtAuthentication();
+        services.AddTransient<ITokenService, TokenService>();
+        services.AddJwtAuthentication();
         services.AddSwaggerForOcelot(configuration, x =>
         {
             x.GenerateDocsForGatewayItSelf = false;
         });
     }
     
-    /*internal static IServiceCollection AddJwtAuthentication(this IServiceCollection services)
+    internal static IServiceCollection AddJwtAuthentication(this IServiceCollection services)
     {
         var settings = services.GetOptions<JwtSettings>(nameof(JwtSettings));
         if (settings == null || string.IsNullOrEmpty(settings.Key))
@@ -60,7 +65,7 @@ public static class ServiceExtensions
         });
 
         return services;
-    }*/
+    }
 
     public static void ConfigureCors(this IServiceCollection services, IConfiguration configuration)
     {

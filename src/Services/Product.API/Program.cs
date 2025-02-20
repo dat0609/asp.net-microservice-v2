@@ -12,6 +12,8 @@ try
 {
     builder.Host.AddAppConfigurations();
     builder.Services.AddInfrastructure(builder.Configuration);
+    builder.Services.AddConfigurationSettings(builder.Configuration);
+    builder.Services.AddJwtAuthentication();
         
     var app = builder.Build();
     app.UseInfrastructure();
@@ -20,7 +22,7 @@ try
             ProductContextSeed.SeedProductAsync(context, Log.Logger).Wait();
         })
         .Run();
-    
+    app.UseAuthentication();
     app.Run();
 }
 catch (Exception ex)
