@@ -44,7 +44,8 @@ public static class ServiceExtensions
     public static IServiceCollection ConfigureServices(this IServiceCollection services) =>
         services.AddScoped<IBasketRepository, BasketRepository>()
             .AddScoped<IMessageProducer, RabbitMQProducer>()
-            .AddTransient<ISerializeService, SerializeService>();
+            .AddTransient<ISerializeService, SerializeService>()
+            .AddTransient<IEmailTemplateService, BasketEmailTemplateService>();
 
     public static IServiceCollection ConfigureGrpcService(this IServiceCollection services)
     {
@@ -91,6 +92,6 @@ public static class ServiceExtensions
     
     public static void ConfigureHttpClientService(this IServiceCollection services)
     {
-        //services.AddHttpClient<BackgroundJobHttpService>();
+        services.AddHttpClient<BackgroundJobHttpService>();
     }
 }
