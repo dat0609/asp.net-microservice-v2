@@ -68,4 +68,12 @@ public class InventoryController : ControllerBase
         await _inventoryService.DeleteAsync(id);
         return NoContent();
     }
+
+    [HttpPost("sales/{itemNo}")]
+    public async Task<IActionResult> SalesOrder(string itemNo, [FromBody] SalesProductDto model)
+    {
+        model.SetItemNo(itemNo);
+        var result = await _inventoryService.SalesItemAsync(itemNo, model);
+        return Ok(result);
+    }
 }

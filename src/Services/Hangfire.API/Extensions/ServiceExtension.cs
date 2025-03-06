@@ -18,9 +18,9 @@ public static class ServiceExtension
             .Get<HangfireSettings>();
         services.AddSingleton(hangFireSettings);
         
-        /*var emailSettings = configuration.GetSection(nameof(SMTPEmailSetting))
+        var emailSettings = configuration.GetSection(nameof(SMTPEmailSetting))
             .Get<SMTPEmailSetting>();
-        services.AddSingleton(emailSettings);*/
+        services.AddSingleton(emailSettings);
 
         return services;
     }

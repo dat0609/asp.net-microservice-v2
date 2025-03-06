@@ -34,9 +34,9 @@ public static class ServiceExtensions
             .Get<GrpcSettings>();
         services.AddSingleton(grpcSettings);
         
-        /*var backgroundJob = configuration.GetSection(nameof(BackgroundJobSettings))
+        var backgroundJob = configuration.GetSection(nameof(BackgroundJobSettings))
             .Get<BackgroundJobSettings>();
-        services.AddSingleton(backgroundJob);*/
+        services.AddSingleton(backgroundJob);
 
         return services;
     }

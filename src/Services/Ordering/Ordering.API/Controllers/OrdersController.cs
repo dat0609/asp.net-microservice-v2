@@ -6,6 +6,8 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Ordering.Application.Common.Models;
 using Ordering.Application.Features.V1.Orders.Commands.CreateOrder;
+using Ordering.Application.Features.V1.Orders.Commands.DeleteOrderByDocNo;
+using Ordering.Application.Features.V1.Orders.Queries.GetOrderById;
 using Ordering.Application.Features.V1.Orders.Queries.GetOrders;
 using Ordering.Domain.Entities;
 using Shared.Services.Email;
@@ -40,17 +42,12 @@ public class OrdersController : ControllerBase
 
     }
 
-    [HttpGet]
-    public async Task<IActionResult> GetOrdersBy()
+    [HttpGet("{id:long}")]
+    public async Task<IActionResult> GetOrdersBy(long id)
     {
-        var msg = new MailRequest()
-        {
-            Subject = "Test Email",
-            Body = "This is a test email.",
-            ToAddress = "lequocdat731@gmail.com"
-        };
-        await _emailService.SendEmailAsync(msg);
-        return Ok();
+        var query = new GetOrderByIdQuery(id);
+        var result = await _mediator.Send(query);
+        return Ok(result);
     }
     
     [HttpPost(RouteNames.CreateOrder)]
@@ -66,5 +63,19 @@ public class OrdersController : ControllerBase
     {
         await _messageProducer.SendMessageAsync(order.ToString());
         return Ok();
+    }
+    
+    [HttpDelete("document-no/{docNo}")]
+    public async Task<IActionResult> GetOrdersBy(string docNo)
+    {
+        var query = new DeleteOrderByDocNoCommand(docNo);
+        var result = await _mediator.Send(query);
+        return Ok(result);
+    }
+    
+    [HttpPost]
+    public async Task<IActionResult> Test([Required] CreateOrderCommand command)
+    {
+        return Ok(1);
     }
 }
