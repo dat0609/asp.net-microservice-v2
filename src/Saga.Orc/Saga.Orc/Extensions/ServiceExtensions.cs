@@ -1,7 +1,10 @@
-﻿using Saga.Orc.HttpRepositories;
+﻿using Contracts.Saga.OrderManager;
+using Saga.Orc.HttpRepositories;
 using Saga.Orc.HttpRepositories.Interfaces;
+using Saga.Orc.OrderManager;
 using Saga.Orc.Services;
 using Saga.Orc.Services.Interfaces;
+using Shared.DTOs.Basket;
 
 namespace Saga.Orc.Extensions;
 
@@ -10,6 +13,7 @@ public static class ServiceExtensions
     public static void ConfigureServices(this IServiceCollection services)
     {
         services.AddTransient<ICheckoutSagaService, CheckoutSagaService>();
+        services.AddTransient<ISagaOrderManager<BasketCheckoutDto, OrderResponse>, SagaOrderManager>();
     }
 
     public static void ConfigureHttpRepository(this IServiceCollection services)

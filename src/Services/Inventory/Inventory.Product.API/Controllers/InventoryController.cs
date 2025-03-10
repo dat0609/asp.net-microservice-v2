@@ -76,4 +76,12 @@ public class InventoryController : ControllerBase
         var result = await _inventoryService.SalesItemAsync(itemNo, model);
         return Ok(result);
     }
+    
+    [HttpPost("sales/order-no/{orderNo}")]
+    public async Task<IActionResult> SaleItem([FromBody] SaleOrderDto model, string orderNo)
+    {
+        model.OrderDocNo = orderNo;
+        var result = await _inventoryService.SaleOrderAsync(model);
+        return Ok(new CreatedSaleOrderSuccessDto(result));
+    }
 }
