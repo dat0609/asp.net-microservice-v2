@@ -1,4 +1,5 @@
-﻿using Contracts.Saga.OrderManager;
+﻿using Common.Logging;
+using Contracts.Saga.OrderManager;
 using Saga.Orc.HttpRepositories;
 using Saga.Orc.HttpRepositories.Interfaces;
 using Saga.Orc.OrderManager;
@@ -13,7 +14,8 @@ public static class ServiceExtensions
     public static void ConfigureServices(this IServiceCollection services)
     {
         services.AddTransient<ICheckoutSagaService, CheckoutSagaService>();
-        services.AddTransient<ISagaOrderManager<BasketCheckoutDto, OrderResponse>, SagaOrderManager>();
+        services.AddTransient<ISagaOrderManager<BasketCheckoutDto, OrderResponse>, SagaOrderManager>()
+            .AddTransient<LoggingDelegatingHandler>();
     }
 
     public static void ConfigureHttpRepository(this IServiceCollection services)
@@ -35,7 +37,7 @@ public static class ServiceExtensions
         services.AddHttpClient<IOrderHttpRepository, OrderHttpRepository>("OrdersAPI", (provider, client) =>
         {
             client.BaseAddress = new Uri("http://localhost:5006/api/v1/");
-        });
+        }).AddHttpMessageHandler<LoggingDelegatingHandler>();
         services.AddScoped(sp => sp.GetService<IHttpClientFactory>().CreateClient("OrdersAPI"));
     }
     
@@ -44,7 +46,7 @@ public static class ServiceExtensions
         services.AddHttpClient<IBasketHttpRepository, BasketHttpRepository>("BasketsAPI", (provider, client) =>
         {
             client.BaseAddress = new Uri("http://localhost:5004/api/");
-        });
+        }).AddHttpMessageHandler<LoggingDelegatingHandler>();
         services.AddScoped(sp => sp.GetService<IHttpClientFactory>().CreateClient("BasketsAPI"));
     }
     
@@ -53,7 +55,7 @@ public static class ServiceExtensions
         services.AddHttpClient<IInventoryHttpRepository, InventoryHttpRepository>("InventoryAPI", (provider, client) =>
         {
             client.BaseAddress = new Uri("http://localhost:5010/api/");
-        });
+        }).AddHttpMessageHandler<LoggingDelegatingHandler>();
         services.AddScoped(sp => sp.GetService<IHttpClientFactory>().CreateClient("InventoryAPI"));
     }
 }

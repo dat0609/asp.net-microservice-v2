@@ -3,6 +3,7 @@ using Basket.API.Repositories;
 using Basket.API.Repositories.Interfaces;
 using Basket.API.Service;
 using Basket.API.Service.Interface;
+using Common.Logging;
 using Contracts.Common.Interfaces;
 using Contracts.Messages;
 using EventBus.Messages.IntegrationEvents.Events;
@@ -45,7 +46,8 @@ public static class ServiceExtensions
         services.AddScoped<IBasketRepository, BasketRepository>()
             .AddScoped<IMessageProducer, RabbitMQProducer>()
             .AddTransient<ISerializeService, SerializeService>()
-            .AddTransient<IEmailTemplateService, BasketEmailTemplateService>();
+            .AddTransient<IEmailTemplateService, BasketEmailTemplateService>()
+            .AddTransient<LoggingDelegatingHandler>();
 
     public static IServiceCollection ConfigureGrpcService(this IServiceCollection services)
     {
@@ -92,6 +94,6 @@ public static class ServiceExtensions
     
     public static void ConfigureHttpClientService(this IServiceCollection services)
     {
-        services.AddHttpClient<BackgroundJobHttpService>();
+        services.AddHttpClient<BackgroundJobHttpService>().AddHttpMessageHandler<LoggingDelegatingHandler>();
     }
 }
