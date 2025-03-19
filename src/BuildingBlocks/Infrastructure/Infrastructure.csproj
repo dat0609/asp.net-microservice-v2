@@ -17,6 +17,7 @@
       <PackageReference Include="inercya.Newtonsoft.Json.Converters" Version="1.0.1" />
       <PackageReference Include="MailKit" Version="4.8.0" />
       <PackageReference Include="MediatR" Version="10.0.1" />
+      <PackageReference Include="Microsoft.Extensions.Http.Polly" Version="9.0.3" />
       <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="7.1.2" />
       <PackageReference Include="MongoDB.Driver" Version="3.1.0" />
       <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />

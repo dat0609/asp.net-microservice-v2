@@ -6,7 +6,7 @@ namespace Hangfire.API.Extensions;
 
 public static class HostExtensions
 {
-    internal static void AddAppConfigurations(this ConfigureHostBuilder host)
+    public static void AddAppConfigurations(this ConfigureHostBuilder host)
     {
         host.ConfigureAppConfiguration((context, config) =>
         {
@@ -16,9 +16,9 @@ public static class HostExtensions
                     reloadOnChange: true)
                 .AddEnvironmentVariables();
         }).UseSerilog(Serilogger.Configure);
-    }
+    } 
     
-    internal static IApplicationBuilder UseHangfireDashboard(this IApplicationBuilder app, IConfiguration configuration)
+    public static IApplicationBuilder UseHangfireDashboard(this IApplicationBuilder app, IConfiguration configuration)
     {
         var configDashboard = configuration.GetSection("HangfireSettings:Dashboard").Get<DashboardOptions>();
         var hangfireSettings = configuration.GetSection("HangfireSettings").Get<HangfireSettings>();

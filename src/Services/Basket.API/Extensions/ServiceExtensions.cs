@@ -11,6 +11,7 @@ using EventBus.Messages.IntegrationEvents.Interfaces;
 using Infrastructure.Common;
 using Infrastructure.Extensions;
 using Infrastructure.Messages;
+using Infrastructure.Policies;
 using Inventory.Grpc.Protos;
 using MassTransit;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -94,6 +95,9 @@ public static class ServiceExtensions
     
     public static void ConfigureHttpClientService(this IServiceCollection services)
     {
-        services.AddHttpClient<BackgroundJobHttpService>().AddHttpMessageHandler<LoggingDelegatingHandler>();
+        services.AddHttpClient<BackgroundJobHttpService>()
+            .AddHttpMessageHandler<LoggingDelegatingHandler>()
+            .UseImmediateHttpRetryPolicy()
+            .UseCircuitHttpRetryPolicy();
     }
 }

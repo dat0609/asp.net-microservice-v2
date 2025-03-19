@@ -2,6 +2,7 @@
 using Contracts.Services;
 using Hangfire.API.Services.Interfaces;
 using Shared.Services.Email;
+using ILogger = Serilog.ILogger;
 
 namespace Hangfire.API.Services;
 
@@ -9,9 +10,9 @@ public class BackgroundJobService : IBackgroundJobService
 {
     private readonly IScheduleJobService _jobService;
     private readonly ISmtpEmailService _emailService;
-    private readonly Serilog.ILogger _logger;
+    private readonly ILogger _logger;
     
-    public BackgroundJobService(IScheduleJobService jobService, ISmtpEmailService emailService, Serilog.ILogger logger)
+    public BackgroundJobService(IScheduleJobService jobService, ISmtpEmailService emailService, ILogger logger)
     {
         _jobService = jobService;
         _emailService = emailService;
