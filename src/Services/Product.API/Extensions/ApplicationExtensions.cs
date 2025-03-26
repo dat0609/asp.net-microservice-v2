@@ -1,4 +1,6 @@
-﻿using Product.API.Persistence;
+﻿using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Product.API.Persistence;
 
 namespace Product.API.Extensions;
 
@@ -16,6 +18,11 @@ public static class ApplicationExtensions
         
         app.UseEndpoints(endpoints =>
         {
+            endpoints.MapHealthChecks("/hc", new HealthCheckOptions()
+            {
+                Predicate = _ => true,
+                ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+            });
             endpoints.MapDefaultControllerRoute();
         });
     }

@@ -26,6 +26,11 @@ public static class HttpClientRetryPolicy
     {
         return builder.AddPolicyHandler(ConfigureCircuitBreakerPolicy());
     }
+    
+    public static IHttpClientBuilder ConfigureTimeoutPolicy(this IHttpClientBuilder builder)
+    {
+        return builder.AddPolicyHandler(Policy.TimeoutAsync<HttpResponseMessage>(5));
+    }
 
     private static IAsyncPolicy<HttpResponseMessage> ImmediateHttpRetry() =>
         HttpPolicyExtensions

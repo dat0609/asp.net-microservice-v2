@@ -4,6 +4,7 @@ using Infrastructure.Common;
 using Infrastructure.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.IdentityModel.Tokens;
 using MySqlConnector;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
@@ -27,7 +28,7 @@ public static class ServiceExtensions
         services.AddInfrastructureServices();
         //services.AddAutoMapper(cfg => cfg.AddProfile(new MappingProfile()));
         // services.AddJwtAuthentication();
-        
+        services.ConfigureHealthChecks(configuration);
         return services;
     }
     
@@ -97,5 +98,12 @@ public static class ServiceExtensions
         });
 
         return services;
+    }
+
+    private static void ConfigureHealthChecks(this IServiceCollection services, IConfiguration configuration)
+    {
+        var databaseSettings = configuration.GetConnectionString("DefaultConnectionString");
+        services.AddHealthChecks()
+            .AddMySql(databaseSettings);
     }
 }
