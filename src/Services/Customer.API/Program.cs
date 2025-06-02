@@ -18,6 +18,7 @@ try
     
     builder.Services.ConfigureCustomerContext(builder.Configuration);
     builder.Services.AddInfrastructureServices();
+    builder.Services.ConfigureHealthChecks(builder.Configuration);
 
     var app = builder.Build();
     app.MapCustomersAPI();

@@ -38,4 +38,11 @@ public static class ServiceExtensions
         services.AddScoped<ICustomerRepository, CustomerRepository>()
             .AddScoped<ICustomerService, CustomerService>();
     }
+    
+    public static void ConfigureHealthChecks(this IServiceCollection services, IConfiguration configuration)
+    {
+        var databaseSettings = configuration.GetConnectionString("DefaultConnectionString");
+        services.AddHealthChecks()
+            .AddNpgSql(databaseSettings);
+    }
 }
