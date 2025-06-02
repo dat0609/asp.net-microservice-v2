@@ -230,3 +230,15 @@ services:
     ports:
       - "6008:80"
     restart: always
+    
+  webstatus:
+    container_name: webstatus
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - HealChecksUI__HealChecks__0__Name=Product Health
+      - HealChecksUI__HealChecks__0__Uri=http://product.api/hc
+      - HealChecksUI__HealChecks__1__Name=Customer Health
+      - HealChecksUI__HealChecks__1__Uri=http://customer.api/hc
+    ports:
+      - "6010:80"
+    
