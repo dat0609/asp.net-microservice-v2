@@ -1,9 +1,11 @@
 ﻿using Contracts.Common.Interfaces;
+using Infrastructure.Identity.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Product.API.Entities;
 using Product.API.Persistence;
 using Product.API.Repositories.Interfaces;
+using Shared.Common.Constants;
 
 namespace Product.API.Controllers;
 
@@ -19,6 +21,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpGet]
+    [ClaimRequirement(FunctionCode.PRODUCT, CommandCode.VIEW)]
     public async Task<IActionResult> GetCatalogProduct()
     {
         var result = await _repository.FindAll().ToListAsync();
