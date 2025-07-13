@@ -2,10 +2,12 @@
 using Contracts.Common.Interfaces;
 using Infrastructure.Common;
 using Infrastructure.Extensions;
+using Infrastructure.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using MySqlConnector;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using Product.API.Persistence;
@@ -23,11 +25,13 @@ public static class ServiceExtensions
         services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         services.AddEndpointsApiExplorer();
-        services.AddSwaggerGen();
+        services.ConfigSwagger(configuration);
         services.ConfigureProductDbContext(configuration);
         services.AddInfrastructureServices();
         //services.AddAutoMapper(cfg => cfg.AddProfile(new MappingProfile()));
         // services.AddJwtAuthentication();
+        services.ConfigAuthentication();
+        services.ConfigAuthorization();
         services.ConfigureHealthChecks(configuration);
         return services;
     }
@@ -65,6 +69,10 @@ public static class ServiceExtensions
             .Get<JwtSettings>();
         services.AddSingleton(jwtSettings);
 
+        var apiConfigSetting = configuration.GetSection("ApiConfig")
+            .Get<ApiConfigSetting>();
+        services.AddSingleton(apiConfigSetting);
+        
         return services;
     }
     
@@ -105,5 +113,53 @@ public static class ServiceExtensions
         var databaseSettings = configuration.GetConnectionString("DefaultConnectionString");
         services.AddHealthChecks()
             .AddMySql(databaseSettings);
+    }
+
+    public static void ConfigSwagger(this IServiceCollection service, IConfiguration configuration)
+    {
+        var apiConfigSetting = service.GetOptions<ApiConfigSetting>("ApiConfig");
+        service.AddSwaggerGen(c =>
+        {
+            c.SwaggerDoc("v1", new OpenApiInfo()
+            {
+                Title = "Product",
+                Version = "v1",
+                Contact = new OpenApiContact()
+                {
+                    Email = "123@gmail.com",
+                    Name = "Identity Service"
+                }
+            });
+            c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            {
+                Type = SecuritySchemeType.OAuth2,
+                Flows = new OpenApiOAuthFlows
+                {
+                    Implicit = new OpenApiOAuthFlow
+                    {
+                        AuthorizationUrl = new Uri($"{apiConfigSetting.IdentityServerBaseUrl}/connect/authorize"),
+                        Scopes = new Dictionary<string, string>
+                        {
+                            {"tedu_api_read", "Read Scope"},
+                            {"tedu_api_write", "Write Scope"}
+                        }
+                    }
+                }
+            });
+            c.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference{ Type = ReferenceType.SecurityScheme,Id = "Bearer" }
+                    },
+                    new List<string>
+                    {
+                        "tedu_api_read",
+                        "tedu_api_write"
+                    }
+                }
+            });
+        });
     }
 }

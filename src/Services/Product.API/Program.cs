@@ -13,16 +13,15 @@ try
     builder.Host.AddAppConfigurations();
     builder.Services.AddInfrastructure(builder.Configuration);
     builder.Services.AddConfigurationSettings(builder.Configuration);
-    builder.Services.AddJwtAuthentication();
+    //builder.Services.AddJwtAuthentication();
         
     var app = builder.Build();
     app.UseInfrastructure();
-    app.MigrateDatabase<ProductContext>((context, _) =>
+    /*app.MigrateDatabase<ProductContext>((context, _) =>
         {
             ProductContextSeed.SeedProductAsync(context, Log.Logger).Wait();
         })
-        .Run();
-    app.UseAuthentication();
+        .Run();*/
     app.Run();
 }
 catch (Exception ex)
